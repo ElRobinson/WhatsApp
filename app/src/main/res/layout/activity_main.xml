@@ -24,13 +24,14 @@
     <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="#57b3eb"
-        android:tint="@android:color/tab_indicator_text" />
+        android:tint="@android:color/background_light"
+        app:rippleColor="?attr/colorBackgroundFloating" />
 
 </android.support.design.widget.CoordinatorLayout>

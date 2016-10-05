@@ -23,4 +23,12 @@
 
     <include layout="@layout/content_cadastro" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:id="@+id/editText2" />
+
 </android.support.design.widget.CoordinatorLayout>
