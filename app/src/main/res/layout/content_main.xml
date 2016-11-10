@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/txtEmail"
+        android:id="@+id/txtCadEmail"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="42dp"
@@ -30,8 +30,8 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/txtPass"
-        android:layout_below="@+id/txtEmail"
-        android:layout_alignEnd="@+id/txtEmail"
+        android:layout_below="@+id/txtCadEmail"
+        android:layout_alignEnd="@+id/txtCadEmail"
         android:hint="@string/text_senha" />
 
     <Button
