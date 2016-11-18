@@ -1,18 +1,26 @@
 package com.robinson.luis.chat;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.ImageViewBitmapInfo;
 import com.koushikdutta.ion.Ion;
 
 public class Cadastro extends AppCompatActivity {
+
+    private static final int REQUEST_DIALOG_PHOTO = 1;
+    private int havePhoto = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +30,16 @@ public class Cadastro extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Button btn = (Button)findViewById(R.id.btnCadCadastrar);
+        final ImageView imgFoto = (ImageView) findViewById(R.id.imgCadFoto);
+
+        imgFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    imgFoto.setImageResource(android.R.color.transparent);
+                    Intent camera = ImagePicker.getPickImageIntent(getBaseContext());
+                    startActivityForResult(camera, REQUEST_DIALOG_PHOTO);
+            }
+        });
 
         btn.setOnClickListener(new View.OnClickListener(){
 
@@ -37,18 +55,25 @@ public class Cadastro extends AppCompatActivity {
 
                 if(txtNome.getText().toString().equals("")){
                     txtNome.setError("Preencha o campo nome.");
+                    txtNome.requestFocus();
                     error = 1;
                 }  if(txtSenha.getText().toString().equals("")){
                     txtSenha.setError("Preencha o campo senha");
+                    txtSenha.requestFocus();
                     error = 1;
                 }  if(txtSenha2.getText().toString().equals("")){
                     txtSenha2.setError("Confirmação de senha vazia.");
+                    txtSenha2.requestFocus();
                     error = 1;
                 }  if(txtEmail.getText().toString().equals("")){
                     txtEmail.setError("Preencha o campo E-mail.");
+                    txtEmail.requestFocus();
                     error = 1;
                 } if (!txtSenha.getText().toString().equals(txtSenha2.getText().toString())){
                     txtEmail.setError("Confirmação de senha difere da senha");
+                    error = 1;
+                } if (havePhoto == 0){
+                    Toast.makeText(getBaseContext(),"Selecione uma foto",Toast.LENGTH_SHORT).show();
                     error = 1;
                 }
 
@@ -76,6 +101,24 @@ public class Cadastro extends AppCompatActivity {
 
             }}
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        if (requestCode == REQUEST_DIALOG_PHOTO){
+            if (requestCode == Activity.RESULT_OK){
+
+                //retrieving photo
+                Bitmap photoUser = ImagePicker.getImageFromResult(getBaseContext(),resultCode,data);
+                ImageView imgFoto = (ImageView) findViewById(R.id.imgCadFoto);
+                imgFoto.setImageBitmap(photoUser);
+                havePhoto = 1;
+            } else {
+                Toast.makeText(getBaseContext(),"Selecione uma foto",Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
     }
 
 
