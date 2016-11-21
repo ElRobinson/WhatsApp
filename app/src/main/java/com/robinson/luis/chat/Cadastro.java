@@ -2,8 +2,10 @@ package com.robinson.luis.chat;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -16,6 +18,11 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.ImageViewBitmapInfo;
 import com.koushikdutta.ion.Ion;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class Cadastro extends AppCompatActivity {
 
@@ -79,12 +86,21 @@ public class Cadastro extends AppCompatActivity {
 
                 if (error==0){
 
-                String URL = "https://192.168.25.5/chat/insert_user.php";
-                Ion.with(getBaseContext())
+                    String URL = "https://192.168.25.5/chat/insert_user.php";
+
+                    String photoFile = "";
+                    try {
+                        photoFile = getBaseContext().getPackageManager().getPackageInfo(getBaseContext().getPackageName(),0).applicationInfo.dataDir + "//photo//perfil.png";
+                    } catch (PackageManager.NameNotFoundException e) {
+
+                    }
+
+                    Ion.with(getBaseContext())
                             .load(URL)
-                            .setBodyParameter("nome_user",txtNome.getText().toString())
-                            .setBodyParameter("senha_user",txtSenha.getText().toString())
-                            .setBodyParameter("email_user",txtEmail.getText().toString())
+                            .setMultipartParameter("nome_user",txtNome.getText().toString())
+                            .setMultipartParameter("senha_user",txtSenha.getText().toString())
+                            .setMultipartParameter("email_user",txtEmail.getText().toString())
+                            .setMultipartFile("photo_user",new File(photoFile))
                             .asJsonObject()
                             .setCallback(new FutureCallback<JsonObject>() {
                                 @Override
@@ -113,6 +129,27 @@ public class Cadastro extends AppCompatActivity {
                 ImageView imgFoto = (ImageView) findViewById(R.id.imgCadFoto);
                 imgFoto.setImageBitmap(photoUser);
                 havePhoto = 1;
+
+                // write data directory
+                File directory = Environment.getDataDirectory();
+                String path = "//data//" + getBaseContext().getPackageName() + "//photo//";
+
+                directory = new File(directory,path);
+                directory.mkdirs();
+
+                OutputStream out = null;
+
+                File outputFile = new File(directory,"perfil.png");
+
+                try {
+                    out = new FileOutputStream(outputFile);
+                    photoUser.compress(Bitmap.CompressFormat.PNG,100,out);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             } else {
                 Toast.makeText(getBaseContext(),"Selecione uma foto",Toast.LENGTH_SHORT).show();
             }
